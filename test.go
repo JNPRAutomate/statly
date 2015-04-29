@@ -15,11 +15,19 @@ type IntInfo struct {
 type PhyInt struct {
 	Name         string      `xml:"name"`
 	TrafficStats TrafficStat `xml:"traffic-statistics"`
+	LogicalInt   LogicalInt  `xml:"logical-interface"`
+}
+
+type LogicalInt struct {
+	Name         string      `xml:"name"`
+	TrafficStats TrafficStat `xml:"traffic-statistics"`
 }
 
 type TrafficStat struct {
-	InBytes  string `xml:"input-bytes"`
-	OutBytes string `xml:"output-bytes"`
+	InPackets  string `xml:"input-packets"`
+	OutPackets string `xml:"output-packets"`
+	InBytes    string `xml:"input-bytes"`
+	OutBytes   string `xml:"output-bytes"`
 }
 
 func main() {
@@ -42,6 +50,7 @@ func main() {
 	}
 	var ii IntInfo
 	xml.Unmarshal([]byte(reply.Data), &ii)
+	fmt.Printf("%#v\n", ii)
 	for item := range ii.PhyInts {
 		fmt.Println(strings.Trim(ii.PhyInts[item].Name, "\n"), strings.Trim(ii.PhyInts[item].TrafficStats.InBytes, "\n"), strings.Trim(ii.PhyInts[item].TrafficStats.OutBytes, "\n"))
 	}
